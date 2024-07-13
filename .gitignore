@@ -1,0 +1,8 @@
+# VSCode stuff:
+.vscode/
+
+# Build folder stuff:
+build/
+
+# I need a folder where I can just do some experiments :-)
+experiments/
