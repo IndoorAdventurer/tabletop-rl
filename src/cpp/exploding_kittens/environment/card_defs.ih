@@ -1,0 +1,125 @@
+// Need to do some nasty template meta-programming, so hiding it here, away
+// from the main interface :-p
+
+// PS: this is absolutely unecessary and overkill, but I wanted to practice
+// my C++ skills again after such a long time :-)
+
+
+#ifndef EK_CARD_DEFS_IH
+#define EK_CARD_DEFS_IH
+
+#include "card_defs.h"
+
+namespace exploding_kittens {
+
+/**
+ * @brief Dummy struct used by IndicesCollector to collect all CardIdx values,
+ * and then later by InitArrayHelper to extract them again.
+ * 
+ * @tparam Indices The CardIdx values to extract later.
+ */
+template <CardIdx ...Indices>
+struct IndicesExtractorDummy {};
+
+
+// Prevents me from having to do lots of casting later on :-p
+constexpr CardIdx operator-(CardIdx lhs, uint8_t rhs) {
+    return from_uint(to_uint(lhs) - rhs);
+}
+
+
+/**
+ * @brief Can collect all indices from the CardIdx enum. In other words, all
+ * enum values (see initArray below for usage).
+ */
+template <CardIdx I, CardIdx ...Others>
+struct IndicesCollector {
+    using type = typename IndicesCollector<I - 1, I, Others...>::type;
+};
+
+template <CardIdx ...Others>
+struct IndicesCollector<from_uint(0), Others...> {
+    using type = IndicesExtractorDummy<from_uint(0), Others...>;
+};
+
+
+/**
+ * @brief Helper function, returns count (but as uint8_t). Only exists because
+ * of the overload below :-p
+ * 
+ * @param count The value that gets returned
+ * @param num_players Number of players. Gets ignored in this overload.
+ * @return The value of count (uint8_t).
+ */
+inline uint8_t get_count(int count, size_t num_players) {
+    return count;
+}
+
+/**
+ * @brief Helper function, calls count_func with num_players as argument, and
+ * returns the result as uint8_t
+ * 
+ * @param count_func Function that gives the count, given a number of players.
+ * @param num_players The number of players to give to count_func.
+ * @return The value returned by count_func(num_players) (uint8_t).
+ */
+inline uint8_t get_count(int (*count_func)(int), size_t num_players) {
+    return count_func(num_players);
+}
+
+
+/**
+ * @brief Helper struct to select the desired field from CardInfo struct.
+ */
+template <CardInfoField, typename T>
+struct FieldSelector;
+
+template <typename T>
+struct FieldSelector<CardInfoField::init_deck, T> {
+    static constexpr auto get() { return T::init_deck; };
+};
+
+template <typename T>
+struct FieldSelector<CardInfoField::init_hand, T> {
+    static constexpr auto get() { return T::init_hand; };
+};
+
+template <typename T>
+struct FieldSelector<CardInfoField::init_rand, T> {
+    static constexpr auto get() { return T::init_rand; };
+};
+
+/**
+ * @brief Helper struct for initArray function. Because of the specialization
+ * below, it is able to extract the template parameter list from the dummy
+ * object.
+ */
+template <typename T, CardInfoField F>
+struct InitArrayHelper;
+
+template <CardIdx ...Indices, CardInfoField F>
+struct InitArrayHelper<IndicesExtractorDummy<Indices...>, F> {
+    static inline auto call(size_t num_players, uint8_t *arr) {
+        int i = -1;
+        ((arr[++i] = get_count(
+            FieldSelector<F, CardInfo<Indices>>::get(), num_players)), ...);
+    }
+};
+
+/**
+ * @brief Initializes the array in a call-by-pointer manner.
+ * 
+ * @tparam F CardInfo field to select. Should correspond to the array you init.
+ * @param num_players The number of players. Game initialization depends on it.
+ * @param arr The array to be initialized ***IN PLACE***! MUST BE THE RIGHT
+ * LENGTH!
+ */
+template <CardInfoField F>
+inline void initArray(size_t num_players, uint8_t *arr) {
+    using Dummy = IndicesCollector<CardIdx::Total - 1>::type;
+    InitArrayHelper<Dummy, F>::call(num_players, arr);
+}
+
+}
+
+#endif // EK_CARD_DEFS_IH

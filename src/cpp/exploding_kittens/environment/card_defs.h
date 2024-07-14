@@ -1,5 +1,7 @@
-#ifndef CARD_DEFS_H
-#define CARD_DEFS_H
+// Definitions related to cards in the Exploding Kittens game.
+
+#ifndef EK_CARD_DEFS_H
+#define EK_CARD_DEFS_H
 
 #include <cstdint>
 #include <cstddef>
@@ -7,7 +9,7 @@
 namespace exploding_kittens {
 
 /**
- * Enum to give each card type in the Exploding Kittens game a unique index.
+ * @brief Gives an index to each unique card in the game.
  */
 enum class CardIdx : uint8_t {
     Exploding_Kitten = 0U,
@@ -29,8 +31,22 @@ enum class CardIdx : uint8_t {
     Total               // Number of elements. Always keep as last!
 };
 
+/**
+ * @brief Convenience function to avoid static_casts everywhere
+ */
+constexpr uint8_t to_uint(CardIdx i) {
+    return static_cast<uint8_t>(i);
+}
+
+/**
+ * @brief Convenience function to avoid static_casts everywhere
+ */
+constexpr CardIdx from_uint(uint8_t i) {
+    return static_cast<CardIdx>(i);
+}
+
 // Number of unique cards in the Exploding Kittens game.
-constexpr size_t unique_cards = static_cast<size_t>(CardIdx::Total);
+constexpr size_t UNIQUE_CARDS = to_uint(CardIdx::Total);
 
 /**
  * Struct defining constants related to a specific card.
@@ -43,20 +59,19 @@ struct CardInfo {
         init_deck = -1,     // Put this many in deck at start of game
         init_hand = -1,     // Give each player this many at start of game
         init_rand = -1      // Randomly divide among deck and player hands
-    }
+    };
 };
 
 // ---Now the card-specific definitions/specializations---:
 
 template <> struct CardInfo<CardIdx::Exploding_Kitten> {
-    static inline int init_deck(int num_players) {return num_players - 1;};
+    static inline int init_deck(size_t num_players) {return num_players - 1; };
     enum { init_hand = 0, init_rand = 0 }; };
 
 template <> struct CardInfo<CardIdx::Defuse> {
-    enum { init_deck = 0, init_hand = 1 }; };
-    static inline int init_rand(int num_players) {
-        return num_players == 5 ? 1 : 2;
-    };
+    enum { init_deck = 0, init_hand = 1 };
+    static inline int init_rand(size_t num_players) {
+        return num_players == 5 ? 1 : 2; } };
 
 template <> struct CardInfo<CardIdx::Nope> {
     enum { init_deck = 0, init_hand = 0, init_rand = 5 }; };
@@ -81,6 +96,27 @@ template <> struct CardInfo<CardIdx::Cat_4> {
 template <> struct CardInfo<CardIdx::Cat_5> {
     enum { init_deck = 0, init_hand = 0, init_rand = 4 }; };
 
+/**
+ * @brief Convenience enum so we can index into the above struct later on.
+ */
+enum class CardInfoField {
+    init_deck, init_hand, init_rand
+};
+
+/**
+ * @brief Initializes the array in a call-by-pointer manner.
+ * 
+ * @tparam F CardInfo field to select. Should correspond to the array you init.
+ * @param num_players The number of players. Game initialization depends on it.
+ * @param arr The array to be initialized ***IN PLACE***! MUST BE THE RIGHT
+ * LENGTH!
+ */
+template <CardInfoField F>
+void initArray(size_t num_players, uint8_t *arr);
+
 }
 
-#endif // CARD_DEFS_H
+// Hiding the implementation of initArray in an internal header file:
+#include "card_defs.ih"
+
+#endif // EK_CARD_DEFS_H
