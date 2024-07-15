@@ -63,7 +63,7 @@ inline uint8_t get_count(int count, size_t num_players) {
  * @param num_players The number of players to give to count_func.
  * @return The value returned by count_func(num_players) (uint8_t).
  */
-inline uint8_t get_count(int (*count_func)(int), size_t num_players) {
+inline uint8_t get_count(int (*count_func)(size_t), size_t num_players) {
     return count_func(num_players);
 }
 
