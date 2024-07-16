@@ -1,5 +1,6 @@
 # Collecting all source files:
 file(GLOB_RECURSE CPP_LIB_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/**.cpp
 )
 

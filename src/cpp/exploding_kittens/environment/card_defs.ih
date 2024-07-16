@@ -120,6 +120,6 @@ inline void initArray(size_t num_players, uint8_t *arr) {
     InitArrayHelper<Dummy, F>::call(num_players, arr);
 }
 
-}
+}  // namespace exploding_kittens
 
 #endif // EK_CARD_DEFS_IH

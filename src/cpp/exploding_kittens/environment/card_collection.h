@@ -1,11 +1,13 @@
 #ifndef EK_CARD_COLLECTION_H
 #define EK_CARD_COLLECTION_H
 
+#include "../../utils.h"
 #include "card_defs.h"
 
 #include <cstdint>
 #include <span>
 #include <vector>
+#include <algorithm>
 
 
 namespace exploding_kittens {
@@ -16,8 +18,8 @@ namespace exploding_kittens {
  */
 class CardCollection {
 
-    // A span that provides a view into the d_data member of the Cards object.
-    std::span<uint8_t, UNIQUE_CARDS> d_data;
+    // Span that provides view into d_card_counts member of the Cards object.
+    std::span<uint8_t, UNIQUE_CARDS> d_card_counts;
 
     public:
         /**
@@ -36,71 +38,47 @@ class CardCollection {
         uint8_t has(CardIdx i) const;
         
         /**
-         * @return The data inside the span object (i.e. -> span::data())
+         * @return The data inside the d_card_counts span (i.e. span::data())
          */
-        uint8_t *data();
+        uint8_t *counts();
     
     protected:
         /**
          * @brief Insert card i into the collection
-         * 
-         * @param i The card to be inserted
          */
         void base_insert(CardIdx i);
 
         /**
          * @brief Remove card i from the collection
          * 
-         * @param i The card to be removed
          * @return true if succeeded, false if card was not present.
          */
         bool base_remove(CardIdx i);
 
+        friend class Cards;
 };
-
-inline uint8_t CardCollection::has(uint8_t i) const {
-    return d_data[i];
-}
-
-inline uint8_t CardCollection::has(CardIdx i) const {
-    return d_data[to_uint(i)];
-}
-
-inline uint8_t *CardCollection::data() {
-    return d_data.data();
-}
-
-inline void CardCollection::base_insert(CardIdx i) {
-    ++d_data[to_uint(i)];
-}
-
-inline bool CardCollection::base_remove(CardIdx i) {
-    if (d_data[to_uint(i)] <= 0)
-        return false;
-    --d_data[to_uint(i)];
-    return true;
-}
 
 /**
  * @brief An ordered CardCollection, such as the deck and discard pile.
  */
 class CardStack: public CardCollection {
     
-    // An ordered representation of d_data. They should always agree.
+    // An ordered representation of d_card_counts. They should always agree.
     std::vector<CardIdx> d_ordered;
     
     public:
         using CardCollection::CardCollection;
         
         /**
-         * @brief Computes a valid state of d_ordered from its d_data.
+         * @brief Computes a valid state of d_ordered from its d_card_counts.
+         * Note that shuffle() has to be called afterwards still!
          */
         void ordered_from_data();
 
         /**
          * @brief Shuffle order of cards
          */
-        void shuffle();                             // TODO
+        void shuffle();
 
         /**
          * @param i Card to be placed on top of the stack.
@@ -128,7 +106,6 @@ class CardStack: public CardCollection {
 
 };
 
-
 /**
  * @brief A player's hand in the Exploding Kittens game. Has no inherent order.
  */
@@ -137,20 +114,20 @@ class CardHand: public CardCollection {
     public:
         using CardCollection::CardCollection;
 
-        /**
-         * @brief Insert a card into hand.
-         * 
-         * @param i Card to insert.
-         */
-        void insert(CardIdx i);
+        // /**
+        //  * @brief Insert a card into hand.
+        //  * 
+        //  * @param i Card to insert.
+        //  */
+        // void insert(CardIdx i);
 
-        /**
-         * @brief Remove a card from hand.
-         * 
-         * @param i Card to remove
-         * @return true if succeeded, false if card was not present.
-         */
-        bool remove(CardIdx i);
+        // /**
+        //  * @brief Remove a card from hand.
+        //  * 
+        //  * @param i Card to remove
+        //  * @return true if succeeded, false if card was not present.
+        //  */
+        // bool remove(CardIdx i);
 
         /**
          * @brief Remove a random card from the hand.
@@ -160,14 +137,8 @@ class CardHand: public CardCollection {
         CardIdx random_remove();
 };
 
-inline void CardHand::insert(CardIdx i) {
-    return base_insert(i);
-}
+} // namespace exploding_kittens
 
-inline bool CardHand::remove(CardIdx i) {
-    return base_remove(i);
-}
-
-}
+#include "card_collection.ih"
 
 #endif // EK_CARD_COLLECTION_H

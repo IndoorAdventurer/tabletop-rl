@@ -18,6 +18,6 @@ constexpr size_t CARDS_2_DEAL = 7;  // Init cards per player. Excludes defuse.
 // ---ACTIONS:----------------------------------------------------------------
 // TODO
 
-}
+} // namespace exploding_kittens
 
 #endif // EK_GAME_DEFS_H

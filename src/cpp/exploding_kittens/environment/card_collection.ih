@@ -1,0 +1,60 @@
+// implementation header for all the inline functions.
+
+#include "card_collection.h"
+
+
+namespace exploding_kittens {
+
+// ---CardCollection:-----
+inline uint8_t CardCollection::has(uint8_t i) const {
+    return d_card_counts[i];
+}
+
+inline uint8_t CardCollection::has(CardIdx i) const {
+    return d_card_counts[to_uint(i)];
+}
+
+inline uint8_t *CardCollection::counts() {
+    return d_card_counts.data();
+}
+
+inline void CardCollection::base_insert(CardIdx i) {
+    ++d_card_counts[to_uint(i)];
+}
+
+inline bool CardCollection::base_remove(CardIdx i) {
+    if (d_card_counts[to_uint(i)] <= 0)
+        return false;
+    --d_card_counts[to_uint(i)];
+    return true;
+}
+
+
+// ---CardStack:-----
+inline void CardStack::shuffle()
+{
+    std::shuffle(d_ordered.begin(), d_ordered.end(),
+        tabletop_general::randnum_gen);
+}
+
+inline void CardStack::push(CardIdx i) {
+    d_ordered.push_back(i);
+}
+
+inline CardIdx CardStack::pop() {
+    CardIdx ret = d_ordered.back();
+    d_ordered.pop_back();
+    return ret;
+}
+
+
+// ---CardHand:-----
+// inline void CardHand::insert(CardIdx i) {
+//     return base_insert(i);
+// }
+
+// inline bool CardHand::remove(CardIdx i) {
+//     return base_remove(i);
+// }
+
+} // namespace exploding_kittens

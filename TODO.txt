@@ -1,0 +1,5 @@
+- [ ] Change interface of CardHand: should probably not have public insert and
+      remove members.
+- [ ] Extent functionality to also encapsulate who knows what.
+    - [ ] Make this optional!
+- [ ]

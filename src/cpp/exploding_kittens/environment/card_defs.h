@@ -48,6 +48,11 @@ constexpr CardIdx from_uint(uint8_t i) {
 // Number of unique cards in the Exploding Kittens game.
 constexpr size_t UNIQUE_CARDS = to_uint(CardIdx::Total);
 
+// Constants for wherever we define arrays of cards:
+constexpr size_t DECK_IDX = 0;
+constexpr size_t DISCARD_PILE_IDX = 1;
+constexpr size_t FIRST_PLAYER_IDX = 2;
+
 /**
  * Struct defining constants related to a specific card.
  */
@@ -114,7 +119,7 @@ enum class CardInfoField {
 template <CardInfoField F>
 void initArray(size_t num_players, uint8_t *arr);
 
-}
+} // namespace exploding_kittens
 
 // Hiding the implementation of initArray in an internal header file:
 #include "card_defs.ih"
