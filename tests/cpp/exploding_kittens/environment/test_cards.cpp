@@ -13,6 +13,9 @@ TEST(CardsTests, InitChecks) {
         cards.reset(num_players);
 
         EXPECT_TRUE(cards_integrity_check(cards));
+
+        EXPECT_EQ(cards.hands.size(), num_players)
+            << "Should actually have the specified number of players.";
         
         // Col sum checks:
         for (const CardHand &hand : cards.hands) {
@@ -28,14 +31,16 @@ TEST(CardsTests, InitChecks) {
             )
             - num_players * 8   // Subtract cards in hands
         ) << "Remainder of cards must be in the discard pile.";
+
+        // Checking some stuff we know about player hands:
+        for (const CardHand &hand : cards.hands) {
+            EXPECT_EQ(hand.has(CardIdx::Exploding_Kitten), 0)
+                << "Exploding Kittens can't be in a player's hand at init.";
+            EXPECT_GE(hand.has(CardIdx::Defuse), 1)
+                << "Each player has at least 1 defuse.";
+        }
     }
 }
 
 
 } // namespace exploding_kittens
-
-// TODO: Test that the sum of cards for each class is always the same. Cards
-// cannot disappear. Also check the total number of defuses according to the
-// rules :-)
-
-// TODO: look for inspiration at the tests from the previous implementation.

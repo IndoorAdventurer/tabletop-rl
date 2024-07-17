@@ -5,17 +5,6 @@
 namespace exploding_kittens {
 
 
-Cards::Cards()
-:
-    d_card_counts(),
-    deck          (d_card_counts.data() + COLS * DECK_IDX),
-    discard_pile  (d_card_counts.data() + COLS * DISCARD_PILE_IDX),
-    hands()
-{
-    // Ensuring we never need to reallocate (for performance).
-    hands.reserve(MAX_PLAYERS);
-}
-
 void Cards::reset_card_counts(size_t num_players) {
     // Re-initializing deck and discard pile's d_card_counts:
     initArray<CardInfoField::init_deck>(num_players, deck.counts());
@@ -23,11 +12,10 @@ void Cards::reset_card_counts(size_t num_players) {
     initArray<CardInfoField::init_rand>(num_players, discard_pile.counts());
     
     // Re-initializing the player hands:
-    hands.clear();
-    for (size_t p = 0; p != num_players; ++p) {
-        uint8_t *player_data = d_card_counts.data() + COLS * (FIRST_PLAYER_IDX + p);
-        hands.emplace_back(player_data);
-        initArray<CardInfoField::init_hand>(num_players, player_data);
+    hands = std::span<CardHand>{
+        d_hands_internal.begin(), d_hands_internal.begin() + num_players};
+    for (CardHand &hand : hands) {
+        initArray<CardInfoField::init_hand>(num_players, hand.counts());
     }
 
     // Deal cards:

@@ -39,6 +39,7 @@ class CardCollection {
         
         /**
          * @return The data inside the d_card_counts span (i.e. span::data())
+         * @todo Maybe change to something other than a pointer later on.
          */
         uint8_t *counts();
     
@@ -57,6 +58,7 @@ class CardCollection {
 
         friend class Cards;
 };
+
 
 /**
  * @brief An ordered CardCollection, such as the deck and discard pile.
@@ -83,14 +85,14 @@ class CardStack: public CardCollection {
         /**
          * @param i Card to be placed on top of the stack.
          */
-        void push(CardIdx i);                       // TODO
+        void push(CardIdx i);
 
         /**
          * @brief Remove card from top of stack.
          * 
          * @return The removed card.
          */
-        CardIdx pop();                              // TODO
+        CardIdx pop();
 
         /**
          * @brief Insert a card somewhere in the stack.
