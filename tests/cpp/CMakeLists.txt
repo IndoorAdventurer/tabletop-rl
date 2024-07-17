@@ -1,6 +1,6 @@
-# Collecting all source files:
+# Collecting all test source files:
 file(GLOB_RECURSE TEST_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/**test_*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/**test*.cpp
 )
 
 # Making the testing executable:

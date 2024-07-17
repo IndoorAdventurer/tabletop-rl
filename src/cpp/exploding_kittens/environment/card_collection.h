@@ -102,8 +102,13 @@ class CardStack: public CardCollection {
          */
         void insert(CardIdx i, int depth);          // TODO
         
-        const CardIdx *view_top_n(size_t n) const;  // TODO
-
+        /**
+         * @brief Get the n cards from the top of the stack.
+         * 
+         * @param n Number of cards to get from the top of the stack.
+         * @return A span that provides a view into the vector.
+         */
+        std::span<CardIdx> get_top_n(size_t n);
 };
 
 /**

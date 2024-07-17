@@ -38,15 +38,21 @@ inline void CardStack::shuffle()
 }
 
 inline void CardStack::push(CardIdx i) {
+    base_insert(i);
     d_ordered.push_back(i);
 }
 
 inline CardIdx CardStack::pop() {
     CardIdx ret = d_ordered.back();
+    base_remove(ret);
     d_ordered.pop_back();
     return ret;
 }
 
+inline std::span<CardIdx> CardStack::get_top_n(size_t n) {
+    auto begin = n > d_ordered.size() ? d_ordered.begin() : d_ordered.end() - n;
+    return std::span<CardIdx, std::dynamic_extent>(begin, d_ordered.end());
+}
 
 // ---CardHand:-----
 // inline void CardHand::insert(CardIdx i) {

@@ -30,6 +30,12 @@ class Cards {
         std::vector<CardHand> hands;
 
         Cards();
+
+        // Disable copy and move semantics. We just want one.
+        Cards(const Cards &) = delete;
+        Cards &operator=(const Cards &) = delete;
+        Cards(Cards &&) = delete;
+        Cards &operator=(Cards &&) = delete;
         
         /**
          * @brief Reinitializes the game to the starting configuration.
