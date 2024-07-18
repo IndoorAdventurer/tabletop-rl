@@ -2,7 +2,8 @@
 #include "testing_utils.h"
 
 #include "exploding_kittens/environment/cards.h"
-#include <iostream>
+
+#include <random>
 
 namespace exploding_kittens {
 
@@ -39,6 +40,59 @@ TEST(CardsTests, InitChecks) {
             EXPECT_GE(hand.has(CardIdx::Defuse), 1)
                 << "Each player has at least 1 defuse.";
         }
+
+        // Check if it throws when we give an invalid number of players:
+        EXPECT_THROW(cards.reset(1), std::invalid_argument)
+            << "reset() should throw when specifying too few players.";
+        EXPECT_THROW(cards.reset(6), std::invalid_argument)
+            << "reset() should throw when given too many players.";
+    }
+}
+
+TEST(CardsTests, StackPopAndTop) {
+    Cards cards;
+    cards.reset(5);
+
+    size_t total = col_sum(cards.deck);
+    EXPECT_EQ(cards.deck.get_top_n(1000).size(), total)
+        << "get_top_n should give all when specifying too large range.";
+    
+    for (size_t n = 0; n <= total; ++n)
+        EXPECT_EQ(cards.deck.get_top_n(n).size(), n)
+            << "get_top_n should give the right number of cards for legal ranges.";
+    
+    for (size_t n = 1; n <= total; ++n) {
+        ASSERT_NO_THROW(cards.deck.pop())
+            << "Should be able to pop all cards";
+        ASSERT_EQ(cards.deck.get_top_n(1000).size(), total - n)
+            << "After popping, ordered list should be one shorter.";
+        ASSERT_EQ(col_sum(cards.deck), total - n);
+    }
+
+    ASSERT_THROW(cards.deck.pop(), std::out_of_range)
+        << "pop() must throw when deck is empty.";    
+
+}
+
+TEST(CardsTests, StackPush) {
+    Cards cards;
+    auto test_push = [&](CardIdx i) {
+        uint8_t before = cards.deck.has(i);
+        cards.deck.push(i);
+        uint8_t after = cards.deck.has(i);
+        EXPECT_EQ(after, before + 1) << "One card `i` should have been added.";
+        EXPECT_EQ(cards.deck.get_top_n(1)[0], i) << "New card should be on top.";
+    };
+
+    std::uniform_int_distribution<uint8_t> dist(
+        0, UNIQUE_CARDS);
+    for (size_t num_players = MIN_PLAYERS; num_players <= MAX_PLAYERS; ++num_players) {
+        cards.reset(num_players);
+        
+        // Doing 3 pushes each time:
+        test_push(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)));
+        test_push(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)));
+        test_push(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)));
     }
 }
 

@@ -1,11 +1,15 @@
 #include "cards.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 namespace exploding_kittens {
 
 
 void Cards::reset_card_counts(size_t num_players) {
+    if (num_players < MIN_PLAYERS or num_players > MAX_PLAYERS)
+        throw std::invalid_argument("num_players out of legal range.");
+    
     // Re-initializing deck and discard pile's d_card_counts:
     initArray<CardInfoField::init_deck>(num_players, deck.counts());
     // Putting everything to still divide in discard pile since it is not used

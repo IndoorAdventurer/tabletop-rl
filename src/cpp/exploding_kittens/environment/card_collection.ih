@@ -2,6 +2,7 @@
 
 #include "card_collection.h"
 
+#include <stdexcept>
 
 namespace exploding_kittens {
 
@@ -43,6 +44,8 @@ inline void CardStack::push(CardIdx i) {
 }
 
 inline CardIdx CardStack::pop() {
+    if (d_ordered.empty())
+        throw std::out_of_range("Tried to pop from empty card stack.");
     CardIdx ret = d_ordered.back();
     base_remove(ret);
     d_ordered.pop_back();
@@ -55,12 +58,6 @@ inline std::span<CardIdx> CardStack::get_top_n(size_t n) {
 }
 
 // ---CardHand:-----
-// inline void CardHand::insert(CardIdx i) {
-//     return base_insert(i);
-// }
-
-// inline bool CardHand::remove(CardIdx i) {
-//     return base_remove(i);
-// }
+// TODO
 
 } // namespace exploding_kittens

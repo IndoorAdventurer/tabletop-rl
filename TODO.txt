@@ -1,5 +1,14 @@
-- [ ] Change interface of CardHand: should probably not have public insert and
-      remove members.
-- [ ] Extent functionality to also encapsulate who knows what.
-    - [ ] Make this optional!
-- [ ]
+UP NEXT:
+# Cards/CardCollection stuff:
+* Implement insert function for Stack
+* Add functionality to CardHand. During the game it must be able to:
+    * Pick a card from the deck
+    * Place a card on the discard pile
+    * Insert an exploding kitten anywhere in the deck
+    * Take a known card from another player
+    * Take a random card from another player
+    * Give a known card to another player
+
+LONG TERM:
+* Extent functionality to also encapsulate who knows what.
+    * Make this optional!

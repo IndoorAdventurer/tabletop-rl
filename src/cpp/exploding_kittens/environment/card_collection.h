@@ -121,27 +121,7 @@ class CardHand: public CardCollection {
     public:
         using CardCollection::CardCollection;
 
-        // /**
-        //  * @brief Insert a card into hand.
-        //  * 
-        //  * @param i Card to insert.
-        //  */
-        // void insert(CardIdx i);
-
-        // /**
-        //  * @brief Remove a card from hand.
-        //  * 
-        //  * @param i Card to remove
-        //  * @return true if succeeded, false if card was not present.
-        //  */
-        // bool remove(CardIdx i);
-
-        /**
-         * @brief Remove a random card from the hand.
-         * 
-         * @return The removed card 
-         */
-        CardIdx random_remove();
+        
 };
 
 } // namespace exploding_kittens
