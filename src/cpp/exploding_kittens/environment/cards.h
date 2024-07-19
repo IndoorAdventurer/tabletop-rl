@@ -7,86 +7,59 @@
 
 #include <cstdint>
 #include <array>
-#include <vector>
-#include <utility>
+#include <span>
 
 namespace exploding_kittens {
 
 /**
  * @brief The current state of the game is in large determined by which cards
- * are where. This class is encapsulates that information, as well as who knows
- * which cards are where.
+ * are where. This class encapsulates that information.
  */
-class Cards {
+struct Cards {
+         
+    CardStack deck;
+    CardStack discard_pile;
+    std::span<CardHand> hands;
 
-    static constexpr size_t MAX_ROWS = MAX_PLAYERS + FIRST_PLAYER_IDX;
-    static constexpr size_t COLS = UNIQUE_CARDS;
+    /**
+     * @brief Construct a new Cards object. Note that Cards::reset should be
+     * called before obtaining a valid state of the object.
+     */
+    Cards() = default;
 
-    // d_card_counts[COLS * location + card_type] = num_cards_of_type.
-    std::array<uint8_t, MAX_ROWS * COLS> d_card_counts;
+    // Disable copy and move semantics. We just want one.
+    Cards(const Cards &) = delete;
+    Cards &operator=(const Cards &) = delete;
+    Cards(Cards &&) = delete;
+    Cards &operator=(Cards &&) = delete;
     
-    // internally creating all hands. Later only giving a smaller span.
-    std::array<CardHand, MAX_PLAYERS> d_hands_internal;
-        
-    public:
-        CardStack deck;
-        CardStack discard_pile;
-        std::span<CardHand> hands;
-
-        Cards();    // Default constructor.
-
-        // Disable copy and move semantics. We just want one.
-        Cards(const Cards &) = delete;
-        Cards &operator=(const Cards &) = delete;
-        Cards(Cards &&) = delete;
-        Cards &operator=(Cards &&) = delete;
-        
-        /**
-         * @brief Reinitializes the game to the starting configuration.
-         * 
-         * @param num_players The number of players for the new game.
-         */
-        void reset(size_t num_players);
+    /**
+     * @brief Reset own state to that of a new game.
+     * 
+     * @param num_players The number of players for the new game.
+     */
+    void reset(size_t num_players);
     
     private:
         /**
-         * @brief Responsible for reinitializing d_card_counts in call to
-         * public reset function.
+         * @brief Following the setup rules of the game to get a starting
+         * state.
          * 
          * @param num_players The number of players for the new game.
-         * @todo split the reset function up because I was still thinking about
-         * adding data about who knows what. Might not put that in the core
-         * Cards class anymore tho, so might just move contents to reset().
+         * @todo I took the contents of this method out of the reset method
+         * because I thought I wanted more from Cards. I don't anymore, so
+         * might change it back later.
          */
-        void reset_card_counts(size_t num_players);
+        void init_new_game(size_t num_players);
 
-        /**
-         * @brief Hidden constructor that does the heavy lifting. Uses dummy
-         * param to extract Seq (sequence of offsets to point to in memory).
-         */
-        template <size_t ...Seq>
-        Cards(std::index_sequence<Seq...>);
+        // internally creating all hands. The hands object is just a subrange
+        // of it.
+        std::array<CardHand, MAX_PLAYERS> d_hands_internal;
 };
 
-inline Cards::Cards()
-:
-    Cards(std::make_index_sequence<MAX_PLAYERS>())
-{}
-
 inline void Cards::reset(size_t num_players) {
-    reset_card_counts(num_players);
+    init_new_game(num_players);
 }
-
-template <size_t ...Indices>
-Cards::Cards::Cards(std::index_sequence<Indices...>)
-:
-    d_card_counts(),
-    d_hands_internal{ CardHand(
-        d_card_counts.data() + COLS * (FIRST_PLAYER_IDX + Indices))... },
-    deck          (d_card_counts.data() + COLS * DECK_IDX),
-    discard_pile  (d_card_counts.data() + COLS * DISCARD_PILE_IDX),
-    hands()
-{}
 
 } // namespace exploding_kittens
 

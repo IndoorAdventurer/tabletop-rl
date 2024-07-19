@@ -6,13 +6,13 @@
 namespace exploding_kittens {
 
 
-void Cards::reset_card_counts(size_t num_players) {
+void Cards::init_new_game(size_t num_players) {
     if (num_players < MIN_PLAYERS or num_players > MAX_PLAYERS)
         throw std::invalid_argument("num_players out of legal range.");
     
-    // Re-initializing deck and discard pile's d_card_counts:
+    // Re-initializing deck and discard pile's d_card_counts. Discard pile
+    // should be empty at init, but using it here to deal from:
     initArray<CardInfoField::init_deck>(num_players, deck.counts());
-    // Putting everything to still divide in discard pile since it is not used
     initArray<CardInfoField::init_rand>(num_players, discard_pile.counts());
     
     // Re-initializing the player hands:
@@ -22,9 +22,9 @@ void Cards::reset_card_counts(size_t num_players) {
         initArray<CardInfoField::init_hand>(num_players, hand.counts());
     }
 
-    // Deal cards:
+    // Deal cards from discard pile to player hands:
     discard_pile.ordered_from_data();
-    discard_pile.shuffle();       // All remaining cards are on discard pile
+    discard_pile.shuffle();
     for (CardHand &hand : hands) {
         for (size_t i = 0; i != CARDS_2_DEAL; ++i) {
             CardIdx card = discard_pile.pop();
@@ -32,7 +32,7 @@ void Cards::reset_card_counts(size_t num_players) {
         }
     }
 
-    // Move rest from discard pile to deck:
+    // Move the rest from discard pile to deck:
     for (size_t i = 0; i != UNIQUE_CARDS; ++i)
         deck.d_card_counts[i] += discard_pile.d_card_counts[i];
     std::fill(discard_pile.d_card_counts.begin(), discard_pile.d_card_counts.end(), 0);

@@ -11,4 +11,14 @@ UP NEXT:
 LONG TERM:
 * Extent functionality to also encapsulate who knows what.
     * Make this optional!
-    * Turn Cards into a template for this that only accepts CardHand derivatives with CardHand self as default value.
+    * Turn Cards into a template for this that only accepts CardHand derivatives
+      with CardHand self as default value.
+* Beware of the following:
+    * With Favor and Two Card Combo, there is a "bug" in the rules that one
+      one might play their nope to prevent it, but that the nope gets noped,
+      resulting in having to give/take a card while none are there. In this
+      case, it is best to just not give/take anything.
+
+LONGER TERM:
+* Implement 'Regenwormen'.
+* Implement 'Mens erger je niet'.

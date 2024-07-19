@@ -54,14 +54,15 @@ inline CardIdx CardStack::pop() {
 
 inline void CardStack::insert(CardIdx i, size_t depth) {
     base_insert(i);
-    auto position = depth > d_ordered.size() ?
-        d_ordered.begin() : (d_ordered.end() - depth);
+    auto position = depth > d_ordered.size() ? d_ordered.begin() :
+        (d_ordered.end() - depth);
     d_ordered.insert(position, i);
 }
 
 inline std::span<CardIdx> CardStack::get_top_n(size_t n) {
-    auto begin = n > d_ordered.size() ? d_ordered.begin() : d_ordered.end() - n;
-    return std::span<CardIdx, std::dynamic_extent>(begin, d_ordered.end());
+    auto begin = n > d_ordered.size() ? d_ordered.begin() :
+        (d_ordered.end() - n);
+    return std::span<CardIdx>(begin, d_ordered.end());
 }
 
 // ---CardHand:-----
@@ -71,17 +72,18 @@ inline CardIdx CardHand::take_from(CardStack &stack) {
     return i;
 }
 
-inline bool CardHand::take_from(CardHand &other, CardIdx i) {
+inline CardIdx CardHand::take_from(CardHand &other, CardIdx i) {
     if (other.base_remove(i)) {
         base_insert(i);
-        return true;
+        return i;
     }
-    return false;
+    return CardIdx::Error;
 }
 
 inline CardIdx CardHand::take_from(CardHand &other) {
     CardIdx i = random_card();
-    take_from(other, i);
+    if (i != CardIdx::Error)
+        take_from(other, i);
     return i;
 }
 

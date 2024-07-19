@@ -6,7 +6,6 @@
 
 #include <cstdint>
 #include <span>
-#include <vector>
 #include <algorithm>
 
 
@@ -18,15 +17,16 @@ namespace exploding_kittens {
  */
 class CardCollection {
 
-    // Span that provides view into d_card_counts member of the Cards object.
-    std::span<uint8_t, UNIQUE_CARDS> d_card_counts;
+    // For each card, specifies how many there are in this collection.
+    std::array<uint8_t, UNIQUE_CARDS> d_card_counts;
 
     public:
+        
         /**
-         * @param view A view into an existing array. Must be UNIQUE_CARDS
-         * in length!
+         * @brief Default constructor. Beware! does not achieve a valid initial
+         * state. For that, see Cards::init_new_game.
          */
-        CardCollection(uint8_t *view);
+        CardCollection() = default;
 
         /**
          * @brief Returns the number of cards this collection has of type i.
@@ -57,7 +57,8 @@ class CardCollection {
         bool base_remove(CardIdx i);
 
         /**
-         * @brief Returns a random card weighted by own card counts.
+         * @brief Returns a random card (probabilities proportional to counts).
+         * If empty, returns CardIdx::Error.
          */
         CardIdx random_card() const;
 
@@ -83,7 +84,7 @@ class CardStack: public CardCollection {
         void ordered_from_data();
 
         /**
-         * @brief Shuffle order of cards
+         * @brief Shuffle the cards randomly.
          */
         void shuffle();
 
@@ -119,7 +120,7 @@ class CardStack: public CardCollection {
 };
 
 /**
- * @brief A player's hand in the Exploding Kittens game. Has no inherent order.
+ * @brief A player's hand in the Exploding Kittens game.
  */
 class CardHand: public CardCollection {
 
@@ -139,22 +140,22 @@ class CardHand: public CardCollection {
          * 
          * @param other The hand of the other player.
          * @param i The card to select.
-         * @return true if succeeded, false if the other didn't have i.
+         * @return i if succeeded, CardIdx::Error if not.
          */
-        bool take_from(CardHand &other, CardIdx i);
+        CardIdx take_from(CardHand &other, CardIdx i);
         
         /**
          * @brief Take a random card from another player.
          * 
          * @param other The hand of the other player.
-         * @return CardIdx The card you ended up picking.
+         * @return CardIdx The card you ended up picking, or CardIdx::Error.
          */
         CardIdx take_from(CardHand &other);
 
         /**
          * @brief Place a card on top of a stack.
          * 
-         * @param stack The stack (deck/discard pile) to place the card.
+         * @param stack The stack (deck/discard pile) to place the card on.
          * @param i The card to place there
          */
         void place_at(CardStack &stack, CardIdx i);
