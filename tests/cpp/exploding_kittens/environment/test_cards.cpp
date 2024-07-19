@@ -84,8 +84,7 @@ TEST(CardsTests, StackPush) {
         EXPECT_EQ(cards.deck.get_top_n(1)[0], i) << "New card should be on top.";
     };
 
-    std::uniform_int_distribution<uint8_t> dist(
-        0, UNIQUE_CARDS);
+    std::uniform_int_distribution<uint8_t> dist(0, UNIQUE_CARDS - 1);
     for (size_t num_players = MIN_PLAYERS; num_players <= MAX_PLAYERS; ++num_players) {
         cards.reset(num_players);
         
@@ -93,6 +92,26 @@ TEST(CardsTests, StackPush) {
         test_push(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)));
         test_push(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)));
         test_push(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)));
+    }
+}
+
+TEST(CardsTests, StackInsert) {
+    Cards cards;
+    auto test_insert = [&](CardIdx i, size_t depth) {
+        uint8_t before = cards.deck.has(i);
+        cards.deck.insert(i, depth);
+        uint8_t after = cards.deck.has(i);
+        EXPECT_EQ(after, before + 1) << "One card `i` should have been added.";
+        EXPECT_EQ(cards.deck.get_top_n(depth+1)[0], i)
+            << "Card " << static_cast<int>(i) << " should be inserted at depth "
+            << depth << ". Note that if depth > size, it gets inserted at bottom.";
+    };
+    std::uniform_int_distribution<uint8_t> dist(0, UNIQUE_CARDS - 1);
+    for (size_t num_players = MIN_PLAYERS; num_players <= MAX_PLAYERS; ++num_players) {
+        for (size_t depth = 0; depth != 40; ++depth) {
+            cards.reset(num_players);
+            test_insert(static_cast<CardIdx>(dist(tabletop_general::randnum_gen)), depth);
+        }
     }
 }
 

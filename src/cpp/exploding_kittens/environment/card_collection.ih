@@ -52,12 +52,52 @@ inline CardIdx CardStack::pop() {
     return ret;
 }
 
+inline void CardStack::insert(CardIdx i, size_t depth) {
+    base_insert(i);
+    auto position = depth > d_ordered.size() ?
+        d_ordered.begin() : (d_ordered.end() - depth);
+    d_ordered.insert(position, i);
+}
+
 inline std::span<CardIdx> CardStack::get_top_n(size_t n) {
     auto begin = n > d_ordered.size() ? d_ordered.begin() : d_ordered.end() - n;
     return std::span<CardIdx, std::dynamic_extent>(begin, d_ordered.end());
 }
 
 // ---CardHand:-----
-// TODO
+inline CardIdx CardHand::take_from(CardStack &stack) {
+    CardIdx i = stack.pop();
+    base_insert(i);
+    return i;
+}
+
+inline bool CardHand::take_from(CardHand &other, CardIdx i) {
+    if (other.base_remove(i))
+        base_insert(i);
+        return true;
+    return false;
+}
+
+inline CardIdx CardHand::take_from(CardHand &other) {
+    CardIdx i = random_card();
+    take_from(other, i);
+    return i;
+}
+
+inline void CardHand::place_at(CardStack &stack, CardIdx i) {
+    if (not base_remove(i))
+        throw std::range_error("Specified card not in own hand.");
+    stack.push(i);
+}
+
+inline void CardHand::place_at(CardStack &stack, CardIdx i, size_t depth) {
+    if (not base_remove(i))
+        throw std::range_error("Specified card not in own hand.");
+    stack.insert(i, depth);
+}
+
+void CardHand::give_to(CardHand &other, CardIdx i) {
+    other.take_from(*this, i);
+}
 
 } // namespace exploding_kittens

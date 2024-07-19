@@ -1,13 +1,12 @@
 UP NEXT:
 # Cards/CardCollection stuff:
-* Implement insert function for Stack
 * Add functionality to CardHand. During the game it must be able to:
-    * Pick a card from the deck
-    * Place a card on the discard pile
-    * Insert an exploding kitten anywhere in the deck
-    * Take a known card from another player
-    * Take a random card from another player
-    * Give a known card to another player
+    * Pick a card from the deck [CHECK/NO UNITTEST YET THO]
+    * Place a card on the discard pile [CHECK/NO UNITTEST YET THO]
+    * Insert an exploding kitten anywhere in the deck [CHECK/NO UNITTEST YET THO]
+    * Take a known card from another player [CHECK/NO UNITTEST YET THO]
+    * Take a random card from another player [CHECK/NO UNITTEST YET THO]
+    * Give a known card to another player [CHECK/NO UNITTEST YET THO]
 
 LONG TERM:
 * Extent functionality to also encapsulate who knows what.
