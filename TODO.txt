@@ -11,3 +11,4 @@ UP NEXT:
 LONG TERM:
 * Extent functionality to also encapsulate who knows what.
     * Make this optional!
+    * Turn Cards into a template for this that only accepts CardHand derivatives with CardHand self as default value.
