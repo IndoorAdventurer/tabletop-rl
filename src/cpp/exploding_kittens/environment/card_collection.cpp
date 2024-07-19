@@ -19,8 +19,8 @@ CardIdx CardCollection::random_card() const {
     if (total_cards == 0)
         throw std::out_of_range("Can't pick from empty collection.");
 
-        size_t rand_num = std::uniform_int_distribution(0UL, total_cards - 1)
-            (tabletop_general::randnum_gen);
+    size_t rand_num = std::uniform_int_distribution(0UL, total_cards - 1)
+        (tabletop_general::randnum_gen);
     
     uint8_t i = 0; uint8_t h = has(i);
     while (rand_num >= h) {

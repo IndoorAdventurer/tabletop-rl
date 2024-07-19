@@ -72,9 +72,10 @@ inline CardIdx CardHand::take_from(CardStack &stack) {
 }
 
 inline bool CardHand::take_from(CardHand &other, CardIdx i) {
-    if (other.base_remove(i))
+    if (other.base_remove(i)) {
         base_insert(i);
         return true;
+    }
     return false;
 }
 
@@ -96,7 +97,7 @@ inline void CardHand::place_at(CardStack &stack, CardIdx i, size_t depth) {
     stack.insert(i, depth);
 }
 
-void CardHand::give_to(CardHand &other, CardIdx i) {
+inline void CardHand::give_to(CardHand &other, CardIdx i) {
     other.take_from(*this, i);
 }
 
