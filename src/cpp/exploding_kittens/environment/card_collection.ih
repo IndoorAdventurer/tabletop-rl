@@ -24,7 +24,7 @@ inline void CardCollection::base_insert(CardIdx i) {
 }
 
 inline bool CardCollection::base_remove(CardIdx i) {
-    if (d_card_counts[to_uint(i)] <= 0)
+    if (d_card_counts[to_uint(i)] == 0)
         return false;
     --d_card_counts[to_uint(i)];
     return true;
@@ -81,9 +81,9 @@ inline CardIdx CardHand::take_from(CardHand &other, CardIdx i) {
 }
 
 inline CardIdx CardHand::take_from(CardHand &other) {
-    CardIdx i = random_card();
+    CardIdx i = other.random_card();
     if (i != CardIdx::Error)
-        take_from(other, i);
+        return take_from(other, i);
     return i;
 }
 
@@ -100,7 +100,8 @@ inline void CardHand::place_at(CardStack &stack, CardIdx i, size_t depth) {
 }
 
 inline void CardHand::give_to(CardHand &other, CardIdx i) {
-    other.take_from(*this, i);
+    if (other.take_from(*this, i) == CardIdx::Error)
+        throw std::range_error("Specified card not in own hand.");
 }
 
 } // namespace exploding_kittens

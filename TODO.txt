@@ -1,18 +1,13 @@
 UP NEXT:
-# Cards/CardCollection stuff:
-* Add functionality to CardHand. During the game it must be able to:
-    * Pick a card from the deck [CHECK/NO UNITTEST YET THO]
-    * Place a card on the discard pile [CHECK/NO UNITTEST YET THO]
-    * Insert an exploding kitten anywhere in the deck [CHECK/NO UNITTEST YET THO]
-    * Take a known card from another player [CHECK/NO UNITTEST YET THO]
-    * Take a random card from another player [CHECK/NO UNITTEST YET THO]
-    * Give a known card to another player [CHECK/NO UNITTEST YET THO]
+* Implement game states.
+* Implement game actions.
 
 LONG TERM:
 * Extent functionality to also encapsulate who knows what.
     * Make this optional!
-    * Turn Cards into a template for this that only accepts CardHand derivatives
-      with CardHand self as default value.
+    * Should only be the case for specific CardHands, so maybe just create
+      something of a change listener that is directly linked to the related
+      agent.
 * Beware of the following:
     * With Favor and Two Card Combo, there is a "bug" in the rules that one
       one might play their nope to prevent it, but that the nope gets noped,

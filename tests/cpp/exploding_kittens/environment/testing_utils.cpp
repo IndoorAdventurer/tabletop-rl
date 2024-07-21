@@ -88,4 +88,11 @@ testing::AssertionResult cards_integrity_check(Cards &cards) {
     return testing::AssertionSuccess();
 }
 
+std::array<uint8_t, UNIQUE_CARDS> copy_counts(CardCollection &col) {
+    std::array<uint8_t, UNIQUE_CARDS> counts;
+    for (size_t i = 0; i != UNIQUE_CARDS; ++i)
+        counts[i] = col.has(i);
+    return counts;
+}
+
 } // namespace exploding_kittens

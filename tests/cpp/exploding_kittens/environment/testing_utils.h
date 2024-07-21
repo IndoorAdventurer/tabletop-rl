@@ -21,6 +21,9 @@ std::array<size_t, UNIQUE_CARDS> to_counts(CardStack &col);
 // Test the integrity of cards according to some rules.
 testing::AssertionResult cards_integrity_check(Cards &cards);
 
+// Create a copy of the counts object (using the provided interface).
+std::array<uint8_t, UNIQUE_CARDS> copy_counts(CardCollection &col);
+
 } // namespace exploding_kittens
 
 #endif // TESTING_UTILS_H
