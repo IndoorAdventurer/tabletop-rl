@@ -16,3 +16,13 @@ target_include_directories(cpp_tests_all PRIVATE ${PROJECT_SOURCE_DIR}/src/cpp)
 include(GoogleTest)
 
 gtest_discover_tests(cpp_tests_all)
+
+# ------------------------------------------:
+# Making an extra executable for experiments:
+add_executable(experiments experiments.cpp)
+
+# Linking to the cpp archive:
+target_link_libraries(experiments cpp_archive)
+
+# Adding the cpp library for easy imports:
+target_include_directories(experiments PRIVATE ${PROJECT_SOURCE_DIR}/src/cpp)

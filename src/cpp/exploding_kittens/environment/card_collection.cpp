@@ -1,8 +1,10 @@
 #include "card_collection.h"
 
 #include "../../utils.h"
+
 #include <numeric>
 #include <random>
+#include <stdexcept>
 
 namespace exploding_kittens
 {
@@ -25,14 +27,14 @@ CardIdx CardCollection::random_card() const {
         rand_num -= h;
         h = has(++i);
     }
-    return static_cast<CardIdx>(i);
+    return from_uint(i);
 }
 
-void CardStack::ordered_from_data()
-{
-    d_ordered.clear();
-    for (uint8_t i = 0; i != UNIQUE_CARDS; ++i)
-        d_ordered.insert(d_ordered.end(), has(i), from_uint(i));
+bool CardCollection::base_remove(CardIdx i) {
+    if (d_card_counts[to_uint(i)] == 0)
+        return false;
+    --d_card_counts[to_uint(i)];
+    return true;
 }
 
 } // namespace exploding_kittens

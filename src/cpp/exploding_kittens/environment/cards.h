@@ -3,7 +3,8 @@
 
 #include "card_defs.h"
 #include "game_defs.h"
-#include "card_collection.h"
+#include "card_stack.h"
+#include "card_hand.h"
 
 #include <cstdint>
 #include <array>
