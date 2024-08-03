@@ -24,9 +24,7 @@ struct GameState {
     uint8_t turns_left;     // Related to the attack card: number of cards to
                             // draw (or skips to play :-p).
     
-    // Additional state info (used by some non-default states):
-    uint8_t secondary_player;   // Player to nope, or to give favor.
-    // TODO everything needed for nopes. 
+    // TODO secondary info (for specific cards like nope or favor)
 
     GameState() = default;
     
@@ -44,14 +42,24 @@ struct GameState {
     void reset(size_t num_players);
 
     /**
+     * @brief Convenience function: check if a player is alive or not.
+     */
+    bool is_alive(uint8_t player) const;
+
+    /**
+     * @brief shorthand for this->cards.hands[this->current_player]
+     */
+    CardHand &current_hand();
+    
+    /**
      * @brief Convenience function: for a given player (index), returns who would
      * logically come next.
      */
     uint8_t next_player(uint8_t player) const;
 
     /**
-     * @brief applies the state changes needed after a turn is taken (i.e. card
-     * drawn, or skip played).
+     * @brief applies the state changes needed after a turn is taken, such as
+     * moving to the next player, or decreasing turns_left.
      */
     void register_turn();
 };
@@ -60,18 +68,16 @@ inline void GameState::reset(size_t num_players) {
     cards.reset(num_players);
     state = State::Default;
     current_player = 0;     // Player 0 always starts.
-    turns_left = 1;         // Only attack gives >1
+    turns_left = 1;         // 1 turn p.p. by default. (Attack gives >1)
 }
 
-inline uint8_t GameState::next_player(uint8_t player) const {
-    return ++player % cards.hands.size();
+inline bool GameState::is_alive(uint8_t player) const {
+    // Expressing player is dead by the fact that they have an exploding kitten.
+    return cards.hands[player].has(CardIdx::Exploding_Kitten) == 0;
 }
 
-inline void GameState::register_turn() {
-    if (--turns_left == 0) {
-        turns_left = 1;
-        current_player = next_player(current_player);
-    }
+inline CardHand &GameState::current_hand() {
+    return cards.hands[current_player];
 }
 
 } // namespace exploding_kittens
