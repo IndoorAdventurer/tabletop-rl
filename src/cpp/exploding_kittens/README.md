@@ -5,6 +5,19 @@ and explosions. In this directory, the game is implemented as a multi-agent
 reinforcement learning environment, which can be used as a challenge or
 benchmark for people interested in AI.
 
+It should be noted that this game probably has a not too complicated optimal
+strategy, and that you can likely already get a long way with symbolic GOFAI
+techniques. Still, it can be a fun testbed for educational purposes. Especially
+because it can have a fairly large action space (e.g. if you defuse, you can
+place your Kitten back anywhere in the deck), and is partially observable with
+stochastic elements such as re-shuffling the deck.
+
+Initially, I planned on making the game easily extendable, such that I (or
+someone else) could add one of the extension packs later on. However, some
+expansion cards change the game so fundamentally, or ask for a completely
+different way to represent the game to an agent, that I decided to just stick
+to the core game.
+
 ## Leaderboard
 None yet :-p
 

@@ -13,6 +13,8 @@ LONG TERM:
       one might play their nope to prevent it, but that the nope gets noped,
       resulting in having to give/take a card while none are there. In this
       case, it is best to just not give/take anything.
+* Refactor card_defs.ih: I can make it shorter when using the std::integer_range
+  thingy.
 
 LONGER TERM:
 * Implement 'Regenwormen'.
