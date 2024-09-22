@@ -16,6 +16,23 @@ LONG TERM:
 * Refactor card_defs.ih: I can make it shorter when using the std::integer_range
   thingy.
 
+STATE AND ACTION SPACE REPRESENTATION:
+* State space:
+    * For own hand: frequency of occurence of each card
+    * For other players:
+        * Number of cards in their hand
+        * All cards you know they played/lost: again frequency for each card.
+    * For deck:
+        * Total number of cards remaining.
+    * Optionally:
+        * History of played actions by each player.
+* Action space:
+    * Selected cards: same sort of frequency vector as for hand or played/lost cards.
+    * ARG1 and ARG2. These are general arguments meant for things like
+        * A target player (e.g. to steal from);
+        * A target depth (i.e. for placing back an Exploding Kitten);
+        * A target card (for 3 cards combo).
+
 LONGER TERM:
 * Implement 'Regenwormen'.
 * Implement 'Mens erger je niet'.
