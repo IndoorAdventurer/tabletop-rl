@@ -26,6 +26,9 @@ STATE AND ACTION SPACE REPRESENTATION:
         * Total number of cards remaining.
     * Optionally:
         * History of played actions by each player.
+    * PROBLEM!:
+        * Without history, this representation doesn't tell you where you hid the kitten
+          or what you saw when you played a see future.
 * Action space:
     * Selected cards: same sort of frequency vector as for hand or played/lost cards.
     * ARG1 and ARG2. These are general arguments meant for things like
