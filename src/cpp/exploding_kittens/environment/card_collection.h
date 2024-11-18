@@ -38,7 +38,8 @@ class CardCollection {
         
         /**
          * @return The data inside the d_card_counts span (i.e. span::data())
-         * @todo Maybe change to something other than a pointer later on.
+         * @todo Maybe change to something other than a pointer later on, like a
+         * span
          */
         uint8_t *counts();
     

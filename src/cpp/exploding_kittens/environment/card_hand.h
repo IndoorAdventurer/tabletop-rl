@@ -46,6 +46,7 @@ class CardHand: public CardCollection {
          * 
          * @param stack The stack (deck/discard pile) to place the card on.
          * @param i The card to place there
+         * @throws std::range_error if i not in own hand.
          */
         void place_at(CardStack &stack, CardIdx i);
         
@@ -55,6 +56,7 @@ class CardHand: public CardCollection {
          * @param stack The stack (deck/discard pile) to place the card.
          * @param i The card to place there.
          * @param depth The CardStack::insert's depth parameter.
+         * @throws std::range_error if i not in own hand.
          */
         void place_at(CardStack &stack, CardIdx i, size_t depth);
 
@@ -63,6 +65,7 @@ class CardHand: public CardCollection {
          * 
          * @param other Hand of other player.
          * @param i Card to give.
+         * @throws std::range_error if i not in own hand.
          */
         void give_to(CardHand &other, CardIdx i);
 };

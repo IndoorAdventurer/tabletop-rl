@@ -23,7 +23,7 @@ class CardStack: public CardCollection {
         
         /**
          * @brief Computes a valid state of d_ordered from its d_card_counts.
-         * Note that shuffle() has to be called afterwards still!
+         * @note Note that shuffle() has to be called afterwards still!
          */
         void ordered_from_data();
 
@@ -41,6 +41,7 @@ class CardStack: public CardCollection {
          * @brief Remove card from top of stack.
          * 
          * @return The removed card.
+         * @throws std::out_of_range if stack is empty.
          */
         CardIdx pop();
 
@@ -49,8 +50,8 @@ class CardStack: public CardCollection {
          * 
          * @param i The card to insert.
          * @param depth The location: 0 means place on top, 1 means place
-         * under top card, etc. ***NOTE!*** if depth is larger than pile size,
-         * card gets placed on the bottom.
+         * under top card, etc.
+         * @note if depth is larger than pile size, card gets placed on the bottom.
          */
         void insert(CardIdx i, size_t depth);
         

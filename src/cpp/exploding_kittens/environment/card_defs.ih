@@ -35,12 +35,12 @@ constexpr CardIdx operator-(CardIdx lhs, uint8_t rhs) {
 template <CardIdx I, CardIdx ...Others>
 struct IndicesCollector {
     using type = typename IndicesCollector<I - 1, I, Others...>::type;
-};
+};  // Recursive case: parameter list that needs to prepend more values
 
 template <CardIdx ...Others>
 struct IndicesCollector<from_uint(0), Others...> {
     using type = IndicesExtractorDummy<from_uint(0), Others...>;
-};
+};  // Base case: parameter list that starts from 0
 
 
 /**

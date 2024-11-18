@@ -18,13 +18,16 @@ namespace exploding_kittens {
  */
 struct Cards {
          
+    // Public data members:
+
     CardStack deck;
-    CardStack discard_pile;
+    CardStack discard_pile;     // @todo Might not need to be ordered..
     std::span<CardHand> hands;
 
     /**
-     * @brief Construct a new Cards object. Note that Cards::reset should be
-     * called before obtaining a valid state of the object.
+     * @brief Constructor for Cards object.
+     * @note Note that Cards::reset should be called before obtaining a valid
+     * state of the object.
      */
     Cards() = default;
 
@@ -50,6 +53,8 @@ struct Cards {
          * @todo I took the contents of this method out of the reset method
          * because I thought I wanted more from Cards. I don't anymore, so
          * might change it back later.
+         * 
+         * @throws std::invalid_argument if num_players too large or small.
          */
         void init_new_game(size_t num_players);
 

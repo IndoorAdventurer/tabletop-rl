@@ -10,8 +10,8 @@ namespace tabletop_general
 {
 
 /**
- * @brief Only use this pseudo random number generator as a source of randomness
- * to ensure deterministic results when seed gets fixed.
+ * @brief Only ever use this pseudo random number generator as a source of
+ * randomness to ensure deterministic results when seed gets fixed.
  */
 extern ::std::mt19937_64 randnum_gen;
 

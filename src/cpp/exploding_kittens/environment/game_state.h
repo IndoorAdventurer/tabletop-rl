@@ -24,11 +24,16 @@ struct GameState {
     uint8_t turns_left;     // Related to the attack card: number of cards to
                             // draw (or skips to play :-p).
     
-    // TODO secondary info (for specific cards like nope or favor)
+    // @todo secondary info (for specific cards like nope or favor)
 
+    /**
+     * @brief Constructor for GameState object
+     * @note Does not result in a valid state. You need to call GameState::reset
+     * first.
+     */
     GameState() = default;
     
-    // Disable copy and move semantics. We just want one.
+    // Disable copy and move semantics. We just want one for now.
     GameState(const GameState &) = delete;
     GameState &operator=(const GameState &) = delete;
     GameState(GameState &&) = delete;
@@ -63,13 +68,6 @@ struct GameState {
      */
     void register_turn();
 };
-
-inline void GameState::reset(size_t num_players) {
-    cards.reset(num_players);
-    state = State::Default;
-    current_player = 0;     // Player 0 always starts.
-    turns_left = 1;         // 1 turn p.p. by default. (Attack gives >1)
-}
 
 inline bool GameState::is_alive(uint8_t player) const {
     // Expressing player is dead by the fact that they have an exploding kitten.
