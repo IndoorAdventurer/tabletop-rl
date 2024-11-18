@@ -55,7 +55,7 @@ constexpr size_t UNIQUE_CARDS = to_uint(CardIdx::Total);
 template <CardIdx c>
 struct CardInfo {
     // Specialization should be given for every card, else compilation error.
-    static_assert(false, "'CardInfo' struct not defined for given card.");
+    static_assert(c != c, "'CardInfo' struct not defined for given card.");
     enum {
         init_deck = -1,     // Put this many in deck at start of game
         init_hand = -1,     // Give each player this many at start of game
