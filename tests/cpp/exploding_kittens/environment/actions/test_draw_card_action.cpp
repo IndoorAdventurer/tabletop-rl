@@ -1,42 +1,52 @@
 #include <gtest/gtest.h>
+#include "../testing_utils.h"
 
 #include "exploding_kittens/environment/game_state.h"
-#include "exploding_kittens/environment/actions/default_action.h"
+#include "exploding_kittens/environment/actions/draw_card.h"
 
 #include <cstdint>
 
 namespace exploding_kittens {
 
-TEST(DefaultActionTest, SimpleIsValidTest) {
+TEST(DrawCardActionTest, SimpleIsValidTest) {
     GameState g;
+    DrawCard dc(g);
     g.reset(2);
 
-    EXPECT_TRUE(DefaultAction::is_valid(g, 0, 0))
-        << "Default action always valid in starting state.";
+    EXPECT_EQ(get_legal_actions(dc).size(), 1)
+        << "Draw card action always valid in starting state.";
     
     g.state = State::Nope;
 
-    EXPECT_TRUE(DefaultAction::is_valid(g, 0, 0))
-        << "Default action always valid in nope state.";
+    EXPECT_EQ(get_legal_actions(dc).size(), 0)
+        << "Draw card action never valid in nope state.";
     
     g.state = State::Favor;
 
-    EXPECT_FALSE(DefaultAction::is_valid(g, 0, 0))
-        << "Default action never valid in any other state.";
+    EXPECT_EQ(get_legal_actions(dc).size(), 0)
+        << "Draw card action never valid in any other state.";
 }
 
-TEST(DefaultActionTest, SimpleFromDefaultTest) {
+TEST(DrawCardActionTest, SimpleFromDefaultTest) {
     GameState g;
+    DrawCard dc(g);
     g.reset(2);
 
-    ASSERT_TRUE(DefaultAction::is_valid(g, 0, 0))
-        << "Default action always valid in starting state.";
+    auto av = get_legal_actions(dc);
+    ASSERT_EQ(av.size(), 1)
+        << "Draw card action always valid in starting state.";
+    
+    ASSERT_EQ(av[0].type, ActionEnum::Draw)
+        << "Draw should be the corresponding enum type.";
+    
+    // In this case I actually don't care about the integrity of the Action
+    // object, because it won't get checked anyway.
     
     CardIdx i = g.cards.deck.get_top_n(1)[0];
     uint8_t deck_has = g.cards.deck.has(i);
     uint8_t hand_has = g.current_hand().has(i);
 
-    DefaultAction::play_action(g, 0, 0);
+    dc.take_action(av[0]);
 
     EXPECT_EQ(g.cards.deck.has(i), deck_has - 1) << "Top card was taken";
     EXPECT_EQ(g.cards.hands[0].has(i), hand_has + 1) << "Top card was taken";
@@ -49,17 +59,19 @@ TEST(DefaultActionTest, SimpleFromDefaultTest) {
     }
 }
 
-TEST(DefaultActionTest, TestTillDefuse) {
+TEST(DrawCardActionTest, TestTillDefuse) {
     GameState g;
+    DrawCard dc(g);
     g.reset(2);
 
     uint8_t player_idx = 0;
     while (true) {
-        ASSERT_TRUE(DefaultAction::is_valid(g, 0,0));
+        auto av = get_legal_actions(dc);
+        ASSERT_EQ(av.size(), 1);
         EXPECT_EQ(g.current_player, player_idx);
         EXPECT_EQ(g.state, State::Default);
         
-        DefaultAction::play_action(g, 0, 0);
+        dc.take_action(av[0]);
 
         if (not g.is_alive(player_idx))
             break;
@@ -71,8 +83,9 @@ TEST(DefaultActionTest, TestTillDefuse) {
     EXPECT_EQ(g.state, State::Defuse);
 }
 
-TEST(DefaultActionTest, TestTillDeath) {
+TEST(DrawCardActionTest, TestTillDeath) {
     GameState g;
+    DrawCard dc(g);
     g.reset(3);
 
     while (true) {
@@ -80,8 +93,9 @@ TEST(DefaultActionTest, TestTillDeath) {
             g.current_hand().place_at(g.cards.discard_pile, CardIdx::Defuse);
         
         ASSERT_EQ(g.state, State::Default) << "Can only be in default state.";
-        ASSERT_TRUE(DefaultAction::is_valid(g, 0, 0));
-        DefaultAction::play_action(g, 0, 0);
+        auto av = get_legal_actions(dc);
+        ASSERT_EQ(av.size(), 1);
+        dc.take_action(av[0]);
 
         if (g.state == State::Game_Over)
             break;

@@ -11,10 +11,11 @@ namespace exploding_kittens {
  * atomic: some need to target another player, for example.
  */
 enum class ActionEnum : uint8_t {
-    Default = 0U,               // Draw card or don't play Nope
+    Draw = 0U,
     Play_Defuse,                // Args: position to place kitten
 
     Play_Nope,
+    Skip_Nope,
     Play_Skip,
     Play_Attack,
     Play_Shuffle,
@@ -24,8 +25,6 @@ enum class ActionEnum : uint8_t {
 
     Play_Two_Card_Combo,        // Args: player to take card from
     Play_Three_Card_Combo       // Args: player AND card
-    // FIXME: problem I need to solve: how to let agent pick the specific
-    // cards that make up the combo?
 };
 
 /**

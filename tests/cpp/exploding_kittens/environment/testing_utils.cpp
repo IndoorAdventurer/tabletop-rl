@@ -95,4 +95,10 @@ std::array<uint8_t, UNIQUE_CARDS> copy_counts(CardCollection &col) {
     return counts;
 }
 
+std::vector<Action> get_legal_actions(ActionType &at) {
+    std::vector<Action> av;
+    at.append_legal_actions(av);
+    return av;
+}
+
 } // namespace exploding_kittens
