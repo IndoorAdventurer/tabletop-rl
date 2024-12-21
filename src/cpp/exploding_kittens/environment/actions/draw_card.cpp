@@ -3,11 +3,9 @@
 namespace exploding_kittens {
 
 void DrawCard::append_legal_actions(std::vector<Action> &vec) const {
-    if (gs.state == State::Default) {
-        std::array<uint8_t, UNIQUE_CARDS> arr;
-        arr.fill(0U);
-        vec.emplace_back(ActionEnum::Draw, arr, 0U, 0U);
-    }
+    if (gs.state == State::Default)
+        vec.emplace_back(   // Braces guarantee zero-init for std::array:
+            ActionEnum::Draw, std::array<uint8_t, UNIQUE_CARDS>{}, 0U, 0U);
 }
 
 void DrawCard::do_take_action(Action const &a) {

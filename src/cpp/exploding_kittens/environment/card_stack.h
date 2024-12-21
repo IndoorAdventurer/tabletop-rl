@@ -62,6 +62,11 @@ class CardStack: public CardCollection {
          * @return A span that provides a view into the vector.
          */
         std::span<CardIdx> get_top_n(size_t n);
+
+        /**
+         * @return The number of cards on the stack.
+         */
+        size_t size() const;
 };
 
 inline void CardStack::shuffle()
@@ -73,6 +78,10 @@ inline void CardStack::shuffle()
 inline void CardStack::push(CardIdx i) {
     base_insert(i);
     d_ordered.push_back(i);
+}
+
+inline size_t CardStack::size() const {
+    return d_ordered.size();
 }
 
 } // namespace exploding_kittens

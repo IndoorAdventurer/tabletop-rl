@@ -25,6 +25,11 @@ TEST(DrawCardActionTest, SimpleIsValidTest) {
 
     EXPECT_EQ(get_legal_actions(dc).size(), 0)
         << "Draw card action never valid in any other state.";
+    
+    g.state = State::Defuse;
+
+    EXPECT_EQ(get_legal_actions(dc).size(), 0)
+        << "Draw card action never valid in any other state.";
 }
 
 TEST(DrawCardActionTest, SimpleFromDefaultTest) {
