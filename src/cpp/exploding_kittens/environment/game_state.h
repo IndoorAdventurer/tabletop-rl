@@ -27,10 +27,12 @@ struct GameState {
                             // draw (or skips to play :-p).
     
     // Secondary info (for specific cards like nope or favor):
-    std::vector<uint8_t> secondary_players; // for noping and favor giving
-    bool is_noped;                          // if true, action is noped
-    Action staged_action;                   // to execute if not noped
-    NopeableBase *action_type;              // object that can execute action
+    std::vector<uint8_t> secondary_players; // For noping and favor giving.
+                                            // The next secondary is by
+                                            // definition the one at .back().
+    bool is_noped;                          // If true, action is noped
+    Action staged_action;                   // To execute if not noped
+    NopeableBase *action_type;              // Obj that can execute staged_action
 
     /**
      * @brief Constructor for GameState object
