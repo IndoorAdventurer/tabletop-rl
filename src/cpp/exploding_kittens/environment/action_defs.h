@@ -1,7 +1,9 @@
 #ifndef EK_ACTION_DEFS_H
 #define EK_ACTION_DEFS_H
 
-#include "game_state.h"
+#include "card_defs.h"
+
+#include <array>
 
 
 namespace exploding_kittens {
@@ -46,6 +48,12 @@ struct Action {
     /** @brief Argument 2: target card (for 3 card combo) */
     uint8_t arg2;
 };
+
+// Defined in action_type.h:
+struct ActionType;
+
+// Defined in actions/nope_utils.h:
+class NopeableBase;
 
 } // namespace exploding_kittens
 

@@ -12,7 +12,7 @@ void GameState::reset(size_t num_players) {
 uint8_t GameState::next_player(uint8_t player) const
 {
     do
-        player = (player + 1) % cards.hands.size();
+        player = (player + 1) % num_players();
     while (not is_alive(player));
     return player;
 }

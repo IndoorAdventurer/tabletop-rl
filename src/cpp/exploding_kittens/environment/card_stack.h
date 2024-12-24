@@ -2,6 +2,7 @@
 #define EK_CARD_STACK_H
 
 #include "card_collection.h"
+#include "../../utils.h"
 
 #include <cstdint>
 #include <vector>
