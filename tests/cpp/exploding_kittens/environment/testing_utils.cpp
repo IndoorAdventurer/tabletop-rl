@@ -4,6 +4,28 @@
 
 namespace exploding_kittens {
 
+void custom_state_reset(GameState &gs, size_t num_player,
+                                        void (*card_spec_func)(Cards &)) {
+    gs.reset(num_player);
+
+    // Set everything to zero:
+    auto nullify = [&](CardCollection &cc) {
+        for (size_t idx = 0; idx != UNIQUE_CARDS; ++idx)
+            cc.counts()[idx] = 0;
+    };
+    nullify(gs.cards.deck);
+    nullify(gs.cards.discard_pile);
+    for (CardHand &hand : gs.cards.hands)
+        nullify(hand);
+    
+    // Set the cards as desired:
+    card_spec_func(gs.cards);
+
+    // Set the deck and discard pile to a valid state:
+    gs.cards.deck.ordered_from_data();
+    gs.cards.discard_pile.ordered_from_data();
+}
+
 std::array<size_t, UNIQUE_CARDS> row_sums(Cards &cards) {
     std::array<size_t, UNIQUE_CARDS> ret;
     std::fill(ret.begin(), ret.end(), 0);

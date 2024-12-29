@@ -9,13 +9,13 @@ void DrawCard::append_legal_actions(std::vector<Action> &vec) const {
 }
 
 void DrawCard::do_take_action(Action const &a) {
-    CardIdx i = gs.current_hand().take_from(gs.cards.deck);
+    CardIdx i = gs.primary_hand().take_from(gs.cards.deck);
     if (i != CardIdx::Exploding_Kitten) {   // Normal card drawn.
         gs.register_turn();
         return;
     }
 
-    if (gs.current_hand().has(CardIdx::Defuse)) {
+    if (gs.primary_hand().has(CardIdx::Defuse)) {
         gs.state = State::Defuse;           // Exploding Kitten drawn, but we
         return;                             // can defuse. No turn registered!
     }

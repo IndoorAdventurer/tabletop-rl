@@ -10,6 +10,12 @@
 
 namespace exploding_kittens {
 
+// Reset the game to a valid state with a custom initial setup. First sets all
+// cards to zero. Next, calls card_spec_func, which should add cards to hands
+// and stacks. Finally, makes sure game is in a valid state.
+void custom_state_reset(GameState &gs, size_t num_player,
+                                        void (*card_spec_func)(Cards &));
+
 // Sum over all the rows: get total count for each type of card.
 std::array<size_t, UNIQUE_CARDS> row_sums(Cards &cards);
 

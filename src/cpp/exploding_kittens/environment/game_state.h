@@ -22,7 +22,7 @@ struct GameState {
     
     // Primary state info (initialized at reset):
     State state;            // A discrete description of current state.
-    uint8_t current_player; // Player who's turn it is.
+    uint8_t primary_player; // Player who's turn it is.
     uint8_t turns_left;     // Related to the attack card: number of cards to
                             // draw (or skips to play :-p).
     
@@ -65,9 +65,9 @@ struct GameState {
     bool is_alive(uint8_t player) const;
 
     /**
-     * @brief shorthand for this->cards.hands[this->current_player]
+     * @brief shorthand for this->cards.hands[this->primary_player]
      */
-    CardHand &current_hand();
+    CardHand &primary_hand();
 
     /**
      * @brief shorthand for this->cards.hands[this->secondary_players.back()]
@@ -85,6 +85,11 @@ struct GameState {
      * moving to the next player, or decreasing turns_left.
      */
     void register_turn();
+
+    /**
+     * @return a hash for the current state.
+     */
+    uint32_t hash();
 };
 
 inline uint8_t GameState::num_players() const {
@@ -96,8 +101,8 @@ inline bool GameState::is_alive(uint8_t player) const {
     return cards.hands[player].has(CardIdx::Exploding_Kitten) == 0;
 }
 
-inline CardHand &GameState::current_hand() {
-    return cards.hands[current_player];
+inline CardHand &GameState::primary_hand() {
+    return cards.hands[primary_player];
 }
 
 inline CardHand &GameState::secondary_hand() {

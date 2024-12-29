@@ -15,6 +15,10 @@ class NopeableBase: public ActionType {
 
     public:
         using ActionType::ActionType;
+    
+    protected:
+        // drops the cards and moves to nope state:
+        void do_take_action(Action const &a) override;
 
         /**
          * @brief This method gets executed if the action survived the nope
@@ -24,10 +28,9 @@ class NopeableBase: public ActionType {
          * do this a second time, of course..
          */
         virtual void enforce_action(Action const &a) = 0;
-    
-    protected:
-        // drops the cards and moves to nope state:
-        void do_take_action(Action const &a) override;
+
+        friend void nopers_to_secondaries(GameState &g);
+        friend void exit_nope_state(GameState &g);
 };
 
 /**

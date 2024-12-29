@@ -49,7 +49,7 @@ TEST(DrawCardActionTest, SimpleFromDefaultTest) {
     
     CardIdx i = g.cards.deck.get_top_n(1)[0];
     uint8_t deck_has = g.cards.deck.has(i);
-    uint8_t hand_has = g.current_hand().has(i);
+    uint8_t hand_has = g.primary_hand().has(i);
 
     dc.take_action(av[0]);
 
@@ -73,7 +73,7 @@ TEST(DrawCardActionTest, TestTillDefuse) {
     while (true) {
         auto av = get_legal_actions(dc);
         ASSERT_EQ(av.size(), 1);
-        EXPECT_EQ(g.current_player, player_idx);
+        EXPECT_EQ(g.primary_player, player_idx);
         EXPECT_EQ(g.state, State::Default);
         
         dc.take_action(av[0]);
@@ -84,7 +84,7 @@ TEST(DrawCardActionTest, TestTillDefuse) {
         player_idx = (player_idx + 1) % 2;
     }
 
-    EXPECT_EQ(g.current_player, player_idx);
+    EXPECT_EQ(g.primary_player, player_idx);
     EXPECT_EQ(g.state, State::Defuse);
 }
 
@@ -94,8 +94,8 @@ TEST(DrawCardActionTest, TestTillDeath) {
     g.reset(3);
 
     while (true) {
-        while (g.current_hand().has(CardIdx::Defuse))
-            g.current_hand().place_at(g.cards.discard_pile, CardIdx::Defuse);
+        while (g.primary_hand().has(CardIdx::Defuse))
+            g.primary_hand().place_at(g.cards.discard_pile, CardIdx::Defuse);
         
         ASSERT_EQ(g.state, State::Default) << "Can only be in default state.";
         auto av = get_legal_actions(dc);

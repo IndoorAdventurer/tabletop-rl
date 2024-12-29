@@ -11,7 +11,7 @@ void NopeableBase::do_take_action(Action const &a) {
     // Remove the cards from hand:
     for (size_t cIdx = 0; cIdx != a.cards.size(); ++cIdx) {
         for (uint8_t cards = a.cards[cIdx]; cards != 0; --cards)
-            gs.current_hand().place_at(gs.cards.discard_pile, from_uint(cIdx));
+            gs.primary_hand().place_at(gs.cards.discard_pile, from_uint(cIdx));
     }
     
     // Set state accordingly:
@@ -44,9 +44,9 @@ void exit_nope_state(GameState &g) {
     if (g.is_noped)
         return;
     
-    assert(g.action_type && "g.action_type can't be a null pointer.");
-    // TODO: maybe some extra debug asserts: does g.action_type point to the
-    // object corresponding to g.staged_action.type?
+    assert(g.action_type != nullptr && "g.action_type can't be a null pointer.");
+    assert(g.action_type->type == g.staged_action.type
+        && "ActionType obj and staged action must have corresponding type.");
     
     // Execute action if it wasn't noped
     g.action_type->enforce_action(g.staged_action);

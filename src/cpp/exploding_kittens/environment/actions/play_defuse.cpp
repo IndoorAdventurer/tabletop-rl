@@ -26,8 +26,8 @@ void PlayDefuse::append_legal_actions(std::vector<Action> &vec) const {
 void PlayDefuse::do_take_action(Action const &a) {
     // Move cards around:
     size_t depth = a.arg1;
-    gs.current_hand().place_at(gs.cards.discard_pile, CardIdx::Defuse);
-    gs.current_hand().place_at(gs.cards.deck, CardIdx::Exploding_Kitten, depth);
+    gs.primary_hand().place_at(gs.cards.discard_pile, CardIdx::Defuse);
+    gs.primary_hand().place_at(gs.cards.deck, CardIdx::Exploding_Kitten, depth);
     gs.state = State::Default;
 
     // I still need to register the turn:

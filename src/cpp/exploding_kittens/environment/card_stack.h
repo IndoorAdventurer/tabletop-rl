@@ -68,6 +68,8 @@ class CardStack: public CardCollection {
          * @return The number of cards on the stack.
          */
         size_t size() const;
+
+        friend class GameState;
 };
 
 inline void CardStack::shuffle()

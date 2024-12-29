@@ -75,19 +75,19 @@ TEST(DefuseActionTest, BasicRunAction) {
     PlayDefuse pd(g);
     g.reset(2);
     g.state = State::Defuse;
-    g.current_hand().counts()[to_uint(CardIdx::Exploding_Kitten)] += 1;
+    g.primary_hand().counts()[to_uint(CardIdx::Exploding_Kitten)] += 1;
 
     Action ac = get_legal_actions(pd).at(0);
 
-    uint8_t cur_player = g.current_player;
-    uint8_t defuses = g.current_hand().has(CardIdx::Defuse);
-    uint8_t kittens = g.current_hand().has(CardIdx::Exploding_Kitten);
+    uint8_t cur_player = g.primary_player;
+    uint8_t defuses = g.primary_hand().has(CardIdx::Defuse);
+    uint8_t kittens = g.primary_hand().has(CardIdx::Exploding_Kitten);
 
     pd.take_action(ac);
 
     EXPECT_EQ(g.state, State::Default)
         << "We should have returned back to default state";
-    EXPECT_EQ(g.current_player, g.next_player(cur_player))
+    EXPECT_EQ(g.primary_player, g.next_player(cur_player))
         << "In this case we should have moved on to next player (no attacks)";
     EXPECT_EQ(g.cards.hands[cur_player].has(CardIdx::Defuse), defuses - 1)
         << "We should have lost 1 defuse from the action!";
@@ -105,14 +105,14 @@ TEST(DefuseActionTest, TestAllInsertionPositions) {
     for (uint8_t i = 0; i != max_depth; ++i) {
         g.reset(2);
         g.state = State::Defuse;
-        g.current_hand().counts()[to_uint(CardIdx::Exploding_Kitten)] += 1;
+        g.primary_hand().counts()[to_uint(CardIdx::Exploding_Kitten)] += 1;
 
         auto list = get_legal_actions(pd);
         ASSERT_EQ(list.size(), max_depth)
             << "List length should always be the same as we are at the beginning"
             << " of this game.";
         
-        EXPECT_EQ(g.current_player, 0)
+        EXPECT_EQ(g.primary_player, 0)
             << "We always start as player 0.";
         
         pd.take_action(list[i]);
@@ -123,7 +123,7 @@ TEST(DefuseActionTest, TestAllInsertionPositions) {
         EXPECT_EQ(g.state, State::Default)
             << "We should have returned back to default state";
         
-        EXPECT_EQ(g.current_player, 1)
+        EXPECT_EQ(g.primary_player, 1)
             << "In this case we should have moved on to next player (no attacks)";
     }
 }
@@ -151,7 +151,7 @@ TEST(DefuseActionTest, SimpleGameTest) {
             switch (g.state)
             {
             case State::Default:
-                player_idx = g.current_player;
+                player_idx = g.primary_player;
 
                 a = get_legal_actions(dc).back();
                 dc.take_action(a);
@@ -159,25 +159,25 @@ TEST(DefuseActionTest, SimpleGameTest) {
                 ASSERT_EQ(
                     // Can be defuse state or end of game state:
                     g.state != State::Default,
-                    g.current_hand().has(CardIdx::Exploding_Kitten) == 1)
+                    g.primary_hand().has(CardIdx::Exploding_Kitten) == 1)
                     << "Exit default state iff exploding kitten in hand.";
                 
                 ASSERT_EQ(
-                    g.current_player == g.next_player(player_idx),
+                    g.primary_player == g.next_player(player_idx),
                     g.state == State::Default)
                     << "Move to next state iff we did not draw a kitten.";
                     // i.e. we stay in the default state.
 
                 break;
             case State::Defuse:
-                player_idx = g.current_player;
+                player_idx = g.primary_player;
 
                 actions = get_legal_actions(pd);
                 a = actions.at(
                     std::uniform_int_distribution<size_t>(
                         0, actions.size() - 1)(tabletop_general::randnum_gen));
                 
-                ASSERT_EQ(g.current_hand().has(CardIdx::Exploding_Kitten), 1)
+                ASSERT_EQ(g.primary_hand().has(CardIdx::Exploding_Kitten), 1)
                     << "We can only get here if we have a kitten, ofc.";
                 
                 pd.take_action(a);
@@ -185,7 +185,7 @@ TEST(DefuseActionTest, SimpleGameTest) {
                 ASSERT_EQ(g.state, State::Default)
                     << "Always return to default after defuse.";
                 
-                ASSERT_EQ(g.current_player, g.next_player(player_idx))
+                ASSERT_EQ(g.primary_player, g.next_player(player_idx))
                     << "Always move to next player after defuse.";
 
                 break;
@@ -199,7 +199,7 @@ TEST(DefuseActionTest, SimpleGameTest) {
                        << " (but if it does, might be I counted wrong :-p)";
             }
 
-            ASSERT_LE(g.current_hand().has(CardIdx::Exploding_Kitten), 1)
+            ASSERT_LE(g.primary_hand().has(CardIdx::Exploding_Kitten), 1)
                 << "We can never have more than 1 kitten in our hand.";
         }
     }
