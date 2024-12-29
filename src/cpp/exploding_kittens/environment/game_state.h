@@ -97,8 +97,10 @@ inline uint8_t GameState::num_players() const {
 }
 
 inline bool GameState::is_alive(uint8_t player) const {
-    // Expressing player is dead by the fact that they have an exploding kitten.
-    return cards.hands[player].has(CardIdx::Exploding_Kitten) == 0;
+    // Expressing player is dead by the fact that they have an exploding kitten
+    // and no defuse:
+    return  cards.hands[player].has(CardIdx::Exploding_Kitten) == 0 or
+            cards.hands[player].has(CardIdx::Defuse) != 0;
 }
 
 inline CardHand &GameState::primary_hand() {

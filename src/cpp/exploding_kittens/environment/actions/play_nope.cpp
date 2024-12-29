@@ -22,8 +22,10 @@ void PlayNope::append_legal_actions(std::vector<Action> &vec) const {
 }
 
 void PlayNope::do_take_action(Action const &a) {
-    // Manually placing the nope on the discard pile. Not even checking if it
-    // actually is specified in a.cards :-p
+    assert(gs.secondary_hand().has(CardIdx::Nope) &&
+        "No safety checks: player should have nope.");
+    
+    // Manually placing the nope on the discard pile.
     gs.secondary_hand().place_at(gs.cards.discard_pile, CardIdx::Nope);
 
     // Inverting the noped flag and giving everyone a chance to nope again:

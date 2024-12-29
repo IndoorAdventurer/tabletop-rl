@@ -42,6 +42,11 @@ TEST(GameStateTests, RegisterTurnTest) {
 TEST(GameStateTests, RegisterTurnWithDeadPlayersTest) {
     GameState g;
     g.reset(5);
+    for (CardHand &hand : g.cards.hands)
+        hand.counts()[to_uint(CardIdx::Defuse)] = 0;
+    g.cards.deck.counts()[to_uint(CardIdx::Defuse)] = 0;
+    g.cards.deck.ordered_from_data();
+    g.cards.deck.shuffle();
 
     while (g.is_alive(1))
         g.cards.hands[1].take_from(g.cards.deck);

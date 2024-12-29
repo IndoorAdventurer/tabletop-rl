@@ -78,7 +78,7 @@ TEST(DrawCardActionTest, TestTillDefuse) {
         
         dc.take_action(av[0]);
 
-        if (not g.is_alive(player_idx))
+        if (g.cards.hands[player_idx].has(CardIdx::Exploding_Kitten))
             break;
         
         player_idx = (player_idx + 1) % 2;
